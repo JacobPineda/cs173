@@ -4,11 +4,11 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Create Patient</title>
+    <title>Update Patient</title>
   </head>
   <body>
     <?php
-    $form = "<form action='create.php' method='post'>
+    $form = "<form action='update.php' method='put'>
       <table>
           <tr>
             <td>Name</td>
@@ -56,11 +56,11 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
 
           </tr>
         <tr>
-          <td><input type='submit' name = 'create_patient'/></td>
+          <td><input type='submit' name = 'update_patient'/></td>
         </tr>
       </table>
     </form>";
-    if (isset($_POST['create_patient']))
+    if (isset($_POST['update_patient']))
     {
       $object = NULL;
       $object->name->gname = $_POST['given_name'];
@@ -81,6 +81,7 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
       curl_setopt( $curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
       # Return response instead of printing.
       curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
+      curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
       curl_setopt( $curl, CURLOPT_URL, 'http://localhost:8280/cs173/createpatient/' );
       $result = curl_exec($curl);
       //echo $result;
