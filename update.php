@@ -32,8 +32,8 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
       //echo $result;
       curl_close($curl);
 
-      if($result){
-        $form = "<form action='update.php' method='put'>
+      if(true){
+        $form = "<form action='update.php' method='post'>
           <table>
               <tr>
                 <td>Name</td>
@@ -107,7 +107,7 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
           # Return response instead of printing.
           curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
           curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
-          curl_setopt( $curl, CURLOPT_URL, 'http://localhost:8280/cs173/createpatient/' );
+          curl_setopt( $curl, CURLOPT_URL, 'http://localhost:8280/cs173/updatepatient/1');
           $result = curl_exec($curl);
           //echo $result;
           curl_close($curl);
@@ -119,10 +119,10 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
       else{
         echo "Patient with id ".$patient_id." does not exist";
       }
-    }
+    /**}
     else {
       echo "$form";
-    }
+    }**/
 
 
     ?>
