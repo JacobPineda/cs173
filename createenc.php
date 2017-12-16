@@ -9,23 +9,13 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
   <body>
     <?php
     $form = "<form action='createenc.php' method='post' id ='encounter'>
-      <table>
-          <tr> 
-      			<td>Patient Name</td>
-              <td><input name='patient' type='text'  required></td>
-          </tr>
-          <tr>
-            <td>Healthworker Name</td>
-              <td><input name='hwr' type='text'  required></td>
-          </tr>
-          <tr>
-            <td>Assessment</td>
-              <td><input name='assessment' type='textarea' rows = '30' cols = '30' required></td>
-          </tr>
-        <tr>
-          <td><input type='submit' name = 'create_enc'/></td>
-        </tr>
-      </table>
+      		Patient Name <br>
+             <input name='patient' type='text'  required> <br>
+          Healthworker Name <br>
+              <input name='hwr' type='text'  required> <br>
+          Assessment <br>
+              <textarea rows='4' cols='50' name='assessment' required></textarea><br>
+          <input type='submit' name = 'create_enc'/></td>
     </form>";
 
 
@@ -68,8 +58,25 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
       $json = json_encode($object);
       echo $json;
       $curl = curl_init();
+      //curl_setopt($curl, CURLOPT_URL, 'http://localhost:8280/cs173/createencounter/');
+      curl_setopt($curl, CURLOPT_URL, 'http://localhost:3000/encounters');
+      curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($json)));
+      curl_setopt($curl, CURLOPT_POST, 1);
+    // Following line is compulsary to add as it is:
+      curl_setopt($curl, CURLOPT_POSTFIELDS,$json);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+      //curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
+      $result = curl_exec($curl);
+      //$xml = simplexml_load_string($result);
+      //echo $result;
+      $json = json_encode($result);
+      echo $json;
+      curl_close($curl);
+
+      $curl = curl_init();
       curl_setopt($curl, CURLOPT_URL, 'http://localhost:8280/cs173/createencounter/');
-      curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_json)));
+      //curl_setopt($curl, CURLOPT_URL, 'http://localhost:3000/encounters');
+      curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($json)));
       curl_setopt($curl, CURLOPT_POST, 1);
     // Following line is compulsary to add as it is:
       curl_setopt($curl, CURLOPT_POSTFIELDS,$json);
