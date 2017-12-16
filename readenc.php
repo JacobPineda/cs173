@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Get Patient</title>
+    <title>Get Encouter</title>
   </head>
   <body>
     <?php
@@ -61,64 +61,58 @@
 
     return $result;
   }
-    $form = "<form action='read.php' method='post'>
+    $form = "<form action='readenc.php' method='post'>
       <table>
         <tr> 
-    			<td>Given Name</td>
-            <td><input name='given_name' type='text'  required></td>
+    			<td>Patient Name</td>
+            <td><input name='patient' type='text'  required></td>
         </tr>
-        <tr> 
-    			<td>Family Name</td>
-            <td><input name='family_name' type='text'  required></td>
-        </tr>
-        <tr> 
-    			<td>Middle Name</td>
-            <td><input name='middle_name' type='text'  required></td>
-        </tr>
+        <!--<tr> 
+    			<td>Healthworker Name</td>
+            <td><input name='healthworker' type='text'  required></td>
+        </tr> -->
         <tr>
-          <td><input type='submit' name = 'read_patient'/></td>
+          <td><input type='submit' name = 'read_enc'/></td>
         </tr>
       </table>
     </form>";
-      if (isset($_POST['read_patient']))
+      if (isset($_POST['read_enc']))
       {
 
 
-        $XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><authenticationRequest><password>admin</password><username>admin</username></authenticationRequest>";
+        /**$XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><authenticationRequest><password>admin</password><username>admin</username></authenticationRequest>";
         //echo $XML;
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, 'http://localhost:8280/cs173/authenticate/');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/xml'));
         curl_setopt($curl, CURLOPT_POST, 1);
   // Following line is compulsary to add as it is:
-        curl_setopt($curl, CURLOPT_POSTFIELDS,$XML);
+        curl_setopt($curl, CURLOPT_POSTFIELDS,
+                    $XML);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
         $result = curl_exec($curl);
         $key = $result;
         //echo $result;
-        curl_close($curl);
+        curl_close($curl);**/
 
-        $gname = $_POST['given_name'];
-        $fname = $_POST['family_name'];
-        $mname = $_POST['middle_name'];
+        $patient = $_POST['patient'];
+        //$hwr = $_POST['healthworker'];
+
         //echo $patient_id;
-        $XML = "<person><givenName>".$gname."</givenName>
-                <familyName>".$fname."</familyName>
-                <middleName>".$mname."</middleName></person>";
-        //echo $XML;
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, 'http://localhost:8280/cs173/querypatient/');
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/xml','OPENEMPI_SESSION_KEY:'.$key));
-        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_URL, 'http://localhost:8280/cs173/queryencounter/'.$patient);
+        echo $patient;
+        //curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        //curl_setopt($curl, CURLOPT_POST, 1);
   // Following line is compulsary to add as it is:
-        curl_setopt($curl, CURLOPT_POSTFIELDS,
-                    $XML);
+        //curl_setopt($curl, CURLOPT_POSTFIELDS,$patient);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         $result = curl_exec($curl);
-        $xml = simplexml_load_string($result);
-        $json = json_encode($xml);
-        echo prettyPrint($json);
+        //$xml = simplexml_load_string($result);
+        //$json = json_encode($result);
+        //echo prettyPrint($json);
+        echo $result;
         curl_close($curl);
 
       }

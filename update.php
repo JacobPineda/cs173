@@ -8,11 +8,19 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
   </head>
   <body>
     <?php
-    $form = "<form action='update.php' method='post'>
+    $form = "<form action='read.php' method='post'>
       <table>
-        <tr> 
-    			<td>Patient ID</td>
-            <td><input name='patient_id' type='text'  required></td>
+          <tr> 
+      			<td>Given Name</td>
+              <td><input name='given_name' type='text'  required></td>
+        </tr>
+        <tr> 
+      			<td>Family Name</td>
+              <td><input name='family_name' type='text'  required></td>
+        </tr>
+        <tr> 
+      			<td>Middle Name</td>
+              <td><input name='middle_name' type='text'  required></td>
         </tr>
         <tr>
           <td><input type='submit' name = 'read_patient'/></td>
@@ -21,111 +29,53 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
     </form>";
     if (isset($_POST['read_patient']))
     {
-      $patient_id = $_POST['patient_id'];
-      //echo $patient_id;
+
+
+      $XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><authenticationRequest><password>admin</password><username>admin</username></authenticationRequest>";
+      //echo $XML;  
       $curl = curl_init();
-      curl_setopt_array($curl, array(
-      CURLOPT_RETURNTRANSFER => 1,
-      CURLOPT_URL => 'http://localhost:8280/cs173/querypatient/'.$patient_id
-      ));
+      curl_setopt($curl, CURLOPT_URL, 'http://localhost:8280/cs173/authenticate/');
+      curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/xml'));
+      curl_setopt($curl, CURLOPT_POST, 1);
+// Following line is compulsary to add as it is:
+      curl_setopt($curl, CURLOPT_POSTFIELDS,
+                  $XML);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
       $result = curl_exec($curl);
+      $key = $result;
       //echo $result;
       curl_close($curl);
 
-      if(true){
-        $form = "<form action='update.php' method='post'>
-          <table>
-              <tr>
-                <td>Name</td>
-              </tr>
-              <tr> 
-          			<td>&emsp; Family Name</td>
-                  <td><input name='family_name' type='text'  required></td>
-              </tr>
-              <tr>
-                <td>&emsp; Given Name</td>
-                  <td><input name='given_name' type='text'  required></td>
-              </tr>
-              <tr>
-                <td>&emsp; Initial</td>
-                  <td><input name='initial' type='text'  required></td>
-              </tr>
-              <tr>
-                <td>Sex</td>
-                <td><select name='sex'><option value='Male'>Male</option><option value='Female'>Female</option></select><td>
-              </tr>
-              <tr>
-                <td>Birthdate</td>
-                  <td><input name='birthdate' type='date'  required></td>
-              </tr>
-              <tr>
-                <tr>
-                  <td>Address</td>
-                </tr>
-                <tr>
-                  <td>&emsp; City</td>
-                  <td><input name='city' type='text'  required></td>
-                </tr>
-                <tr>
-                  <td>&emsp; State</td>
-                  <td><input name='state' type='text'  required></td>
-                </tr>
-                <tr>
-                  <td>&emsp; Postal Code</td>
-                  <td><input name='postal' type='number'  required></td>
-                </tr>
-                <tr>
-                  <td>&emsp; Country </td>
-                  <td><input name='country' type='text'  required></td>
-                </tr>
+      $gname = $_POST['given_name'];
+      $fname = $_POST['family_name'];
+      $mname = $_POST['middle_name'];
+      //echo $patient_id;
+      $XML = "<person><givenName>".$gname."</givenName>
+              <familyName>".$fname."</familyName>
+              <middleName>".$mname."</middleName></person>";
+      //echo $XML;
+      $curl = curl_init();
+      curl_setopt($curl, CURLOPT_URL, 'http://localhost:8280/cs173/querypatient/');
+      curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/xml','OPENEMPI_SESSION_KEY:'.$key));
+      curl_setopt($curl, CURLOPT_POST, 1);
+// Following line is compulsary to add as it is:
+      curl_setopt($curl, CURLOPT_POSTFIELDS,
+                  $XML);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+      $result = curl_exec($curl);
+      $xml = simplexml_load_string($result);
+      $json = json_encode($xml);
+      //echo prettyPrint($json);
+      //curl_close($curl);
+      echo $json;
 
-              </tr>
-            <tr>
-              <td><input type='submit' name = 'update_patient'/></td>
-            </tr>
-          </table>
-        </form>";
-        if (isset($_POST['update_patient']))
-        {
-          $object = NULL;
-          $object->name->gname = $_POST['given_name'];
-          $object->name->fname = $_POST['family_name'];
-          $object->name->initial = $_POST['initial'];
-          $object->sex = $_POST['sex'];
-          $object->bdate = $_POST['birthdate'];
-          $object->address->city = $_POST['city'];
-          $object->address->state = $_POST['state'];
-          $object->address->postal = $_POST['postal'];
-          $object->address->country = $_POST['country'];
-
-          $JSON = json_encode($object);
-          echo $JSON;
-          //echo $patient_id;
-          $curl = curl_init();
-          curl_setopt( $curl, CURLOPT_POSTFIELDS, $JSON );
-          curl_setopt( $curl, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-          # Return response instead of printing.
-          curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
-          curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
-          curl_setopt( $curl, CURLOPT_URL, 'http://localhost:8280/cs173/updatepatient/1');
-          $result = curl_exec($curl);
-          //echo $result;
-          curl_close($curl);
-        }
-        else {
-          echo "$form";
-        }
-      }
-      else{
-        echo "Patient with id ".$patient_id." does not exist";
-      }
-    /**}
+    }
     else {
       echo "$form";
-    }**/
+    }
 
-
-    ?>
+  ?>
     <br>
     <a class='btn' href='/cs173/index.php'>Back</a></center>
   </body>
