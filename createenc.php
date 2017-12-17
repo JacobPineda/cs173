@@ -13,6 +13,8 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
              <input name='patient' type='text'  required> <br>
           Healthworker Name <br>
               <input name='hwr' type='text'  required> <br>
+          Date <br>
+              <input name='date' type='date'  required> <br>
           Assessment <br>
               <textarea rows='4' cols='50' name='assessment' required></textarea><br>
           <input type='submit' name = 'create_enc'/></td>
@@ -54,7 +56,10 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
       $object = NULL;
       $object->patientname = $_POST['patient'];
       $object->workername = $_POST['hwr'];
+      $time = strtotime($_POST['date']);
+      $new_date = date('Y-m-d', $time);
       $object->assessment = $_POST['assessment'];
+      $object->meetdate = $new_date;
       $json = json_encode($object);
       echo $json;
       $curl = curl_init();
@@ -86,7 +91,7 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
       //$xml = simplexml_load_string($result);
       //echo $result;
       $json = json_encode($result);
-      echo $json;
+      //echo $json;
       curl_close($curl);
     }
     else {

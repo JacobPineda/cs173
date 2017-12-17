@@ -79,7 +79,7 @@
         //echo $patient_id;
         $XML = "<csd:requestParams xmlns:csd=\"urn:ihe:iti:csd:2013\">
 		<csd:commonName>".$sname.", ".$fname."</csd:commonName> </csd:requestParams>";
-        //echo $XML;
+        echo $XML;
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, 'http://localhost:8280/cs173/queryhwr/');
         curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/xml'));
