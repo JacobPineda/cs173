@@ -85,7 +85,7 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
       curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
       $result = curl_exec($curl);
       $key = $result;
-      echo $result;
+      //echo $result;
       curl_close($curl);
 
       $gname = $_POST['given_name'];
@@ -121,9 +121,9 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
       curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
       $result = curl_exec($curl);
       $xml = simplexml_load_string($result);
-      echo $result;
-      //$json = json_encode($xml);
-      //echo $json;
+      //echo $result;
+      $json = json_encode($xml);
+      echo '<h4> Patient created! </h4>'.$json;
       curl_close($curl);
     }
     else {

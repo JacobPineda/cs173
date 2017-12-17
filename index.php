@@ -9,6 +9,7 @@
       <li><a href="/cs173/create.php">Create</a></li>
       <li><a href="/cs173/update.php">Update</a></li>
       <li><a href="/cs173/read.php">Read</a></li>
+    </ul>
 
     <h2>Healthworker</h2>
     <ul>

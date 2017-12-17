@@ -61,7 +61,7 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
       $object->assessment = $_POST['assessment'];
       $object->meetdate = $new_date;
       $json = json_encode($object);
-      echo $json;
+      //echo $json;
       $curl = curl_init();
       //curl_setopt($curl, CURLOPT_URL, 'http://localhost:8280/cs173/createencounter/');
       curl_setopt($curl, CURLOPT_URL, 'http://localhost:3000/encounters');
@@ -74,8 +74,9 @@ error_reporting( E_ERROR | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_E
       $result = curl_exec($curl);
       //$xml = simplexml_load_string($result);
       //echo $result;
-      $json = json_encode($result);
-      echo $json;
+      //$json = json_encode($result);
+      //echo $json;
+      echo '<h4>Encounter created!</h4>'.$result;
       curl_close($curl);
 
       $curl = curl_init();

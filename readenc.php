@@ -5,62 +5,6 @@
   </head>
   <body>
     <?php
-    function prettyPrint( $json )
-    {
-      $result = '';
-      $level = 0;
-      $in_quotes = false;
-      $in_escape = false;
-      $ends_line_level = NULL;
-      $json_length = strlen( $json );
-
-      for( $i = 0; $i < $json_length; $i++ ) {
-          $char = $json[$i];
-          $new_line_level = NULL;
-          $post = "";
-          if( $ends_line_level !== NULL ) {
-              $new_line_level = $ends_line_level;
-              $ends_line_level = NULL;
-          }
-          if ( $in_escape ) {
-              $in_escape = false;
-          } else if( $char === '"' ) {
-              $in_quotes = !$in_quotes;
-          } else if( ! $in_quotes ) {
-              switch( $char ) {
-                  case '}': case ']':
-                      $level--;
-                      $ends_line_level = NULL;
-                      $new_line_level = $level;
-                      break;
-
-                  case '{': case '[':
-                      $level++;
-                  case ',':
-                      $ends_line_level = $level;
-                      break;
-
-                  case ':':
-                      $post = " ";
-                      break;
-
-                  case " ": case "\t": case "\n": case "\r":
-                      $char = "";
-                      $ends_line_level = $new_line_level;
-                      $new_line_level = NULL;
-                      break;
-              }
-          } else if ( $char === '\\' ) {
-              $in_escape = true;
-          }
-          if( $new_line_level !== NULL ) {
-              $result .= "\n".str_repeat( "\t", $new_line_level );
-          }
-          $result .= $char.$post;
-      }
-
-    return $result;
-  }
     $form = "<form action='readenc.php' method='post'>
       <table>
         <tr> 
@@ -101,9 +45,9 @@
 
         //echo $patient_id;
         $curl = curl_init();
-        $modified = str_replace(' ', '+',$id);
-        curl_setopt($curl, CURLOPT_URL, 'http://localhost:8280/cs173/queryencounter/'.$modified);
-        echo $modified;
+        //$modified = str_replace(' ', '+',$id);
+        curl_setopt($curl, CURLOPT_URL, 'http://localhost:8280/cs173/queryencounter/'.$id);
+        //echo $modified;
         //curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
         //curl_setopt($curl, CURLOPT_POST, 1);
   // Following line is compulsary to add as it is:
@@ -113,7 +57,15 @@
         //$xml = simplexml_load_string($result);
         //$json = json_encode($result);
         //echo prettyPrint($json);
-        echo $result;
+
+        if($result){
+          echo '<h2>Encounter query result:</h2>';
+          echo $result;
+        }
+        else {
+          echo 'No encounter found';
+        }
+
         curl_close($curl);
 
       }
